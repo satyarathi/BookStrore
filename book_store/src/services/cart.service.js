@@ -18,12 +18,13 @@ export const addToCart = async (userID, params_book_id)=>{
 
         const userCart = await Cart.findOne({ userId: userID }) || { userId: userID, books: [], cart_Total: 0 };
         let totalPrice = userCart.cart_Total;
+        
 
         const existingBook = userCart.books.find(book => book.productId === params_book_id);
         if (existingBook) {
             existingBook.quantity++;
             totalPrice += existingBook.price;
-            
+           
         } else {
             const newBook = {
                 productId: book._id,
