@@ -32,7 +32,7 @@ export const getBookById = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
       data: data,
-      message: 'User fetched successfully'
+      message: 'Book fetched successfully'
     });
   } catch (error) {
     next(error);
