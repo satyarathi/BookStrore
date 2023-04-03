@@ -12,7 +12,7 @@ export const getBookFromCart = async (userID) => {
 export const addToCart = async (userID, params_book_id)=>{
     try {
         const book = await books.findOne({_id: params_book_id});
-        if(!book) throw new Error('No Book found');
+        if(!book && book.quantity < 0) throw new Error('No Book found');
 
         console.log('Book:', book);
 
@@ -50,53 +50,55 @@ export const addToCart = async (userID, params_book_id)=>{
 
 //Remove books from cart
 
+//Remove books from cart
+
 export const removeBookFromCart = async (userID, params_book_id,allBooks = false) => {
-    const book = await BookService.getBookById(params_book_id);
-    if (!book) {
-      throw new Error('No book found');
-    }
-    console.log('book details', book);
-    var userCart = await Cart.findOne({ userId: userID });
-    
-    if (!userCart) {
-      throw new Error('No cart found');
-    }
-    let existingBook = false;
+  const book = await BookService.getBookById(params_book_id);
+  if (!book) {
+    throw new Error('No book found');
+  }
+  console.log('book details', book);
+  var userCart = await Cart.findOne({ userId: userID });
   
-    let idx;
-    for (idx = 0; idx < userCart.books.length; idx++) {
-      if (userCart.books[idx].productId == params_book_id) {
-        existingBook = true;
-        break;
-      }
+  if (!userCart) {
+    throw new Error('No cart found');
+  }
+  let existingBook = false;
+
+  let idx;
+  for (idx = 0; idx < userCart.books.length; idx++) {
+    if (userCart.books[idx].productId == params_book_id) {
+      existingBook = true;
+      break;
     }
-    let newCart;
-    if (existingBook) {
-  
-      if (
-        userCart.books[idx].quantity == 1 ||
-        userCart.books[idx].quantity == 0 ||
-        allBooks
-      ) {
-        newCart = Cart.findByIdAndUpdate(
-          { _id: userCart._id },
-          {
-            $pull: {
-              books: {
-                productId: book.id
-              }
-            },
-            $inc: {
-              cart_Total: -(book.price * userCart.books[idx].quantity)
+  }
+  let newCart;
+  if (existingBook) {
+
+    if (
+      userCart.books[idx].quantity == 1 ||
+      userCart.books[idx].quantity == 0 ||
+      allBooks
+    ) {
+      newCart = Cart.findByIdAndUpdate(
+        { _id: userCart._id },
+        {
+          $pull: {
+            books: {
+              productId: book.id
             }
+          },
+          $inc: {
+            cart_Total: -(book.price * userCart.books[idx].quantity)
           }
-        );
-      } else {
-        const bookObj = {};
-        bookObj['books.' + idx + '.quantity'] = -1;
-        bookObj['cart_Total'] = -book.price;
-        newCart = Cart.findByIdAndUpdate({ _id: userCart._id }, { $inc: bookObj });
-      }
+        }
+      );
+    } else {
+      const bookObj = {};
+      bookObj['books.' + idx + '.quantity'] = -1;
+      bookObj['cart_Total'] = -book.price;
+      newCart = Cart.findByIdAndUpdate({ _id: userCart._id }, { $inc: bookObj });
     }
-    return newCart;
-  };
+  }
+  return newCart;
+};
