@@ -13,8 +13,7 @@ export const addBook = async (userID, params_book_id) => {
 
         const existingBook = userCart.books.find(book => book.productId === params_book_id);
         if (existingBook) {
-            existingBook.quantity++;
-            console.log('Existing book quantity:', existingBook.quantity);
+            throw new Error('Book already exist');
         } else {
             const newBook = {
                 productId: book._id,
