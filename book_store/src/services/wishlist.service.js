@@ -36,3 +36,36 @@ export const addBook = async (userID, params_book_id) => {
         throw new Error(error.message);
     }
 };
+
+//Remove books from wishlist
+
+export const removeBook = async (userID, params_book_id) => {
+    const checkCart = await Wishlist.findOne({ userId: userID });
+    if (checkCart) {
+        console.log("If User Exists");
+        let bookFound = false
+        let totalPrice = 0
+        let bookquanitity = 0
+        checkCart.books.forEach(element => {
+            if (element.productId == params_book_id) {
+                element.quantity = element.quantity -= 1
+                bookquanitity = element.quantity
+                totalPrice = totalPrice - (element.price * element.quantity);
+                let indexofelement = checkCart.books.indexOf(element);
+                console.log("If Book found");
+                checkCart.books.splice(indexofelement, 1)
+                bookFound = true
+            }
+        });
+        console.log("After deleting the book", checkCart.books);
+        if (bookFound == false) {
+            console.log("If Book not found");
+            throw new Error("Book not in the cart");
+        }
+
+        const updatedCart = await Wishlist.findOneAndUpdate({ userId: userID }, { books: checkCart.books, cart_total: totalPrice }, { new: true })
+        return updatedCart
+    } else {
+        throw new Error("User cart doesn't exist");
+    }
+};
