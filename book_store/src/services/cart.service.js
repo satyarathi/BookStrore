@@ -135,3 +135,16 @@ export const removeBookFromCart = async (userID, params_book_id,allBooks = false
   }
   return newCart;
 };
+
+// Purchase By Id from cart
+export const purchaseBookById = async (_id, userId) => {
+  const myPurchase = await Cart.findByIdAndUpdate(
+   { _id: _id},
+   { isPurchased: true},
+   {new: true}
+  );
+  if (!myPurchase) {
+    throw new Error('Enter valid userId');
+  }
+  return myPurchase;
+};
