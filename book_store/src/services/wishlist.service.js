@@ -41,7 +41,6 @@ export const addBook = async (userID, params_book_id) => {
 export const removeBook = async (userID, params_book_id) => {
     const checkCart = await Wishlist.findOne({ userId: userID });
     if (checkCart) {
-        console.log("If User Exists");
         let bookFound = false
         let totalPrice = 0
         let bookquanitity = 0
@@ -56,7 +55,7 @@ export const removeBook = async (userID, params_book_id) => {
                 bookFound = true
             }
         });
-        console.log("After deleting the book", checkCart.books);
+        
         if (bookFound == false) {
             console.log("If Book not found");
             throw new Error("Book not in the cart");
