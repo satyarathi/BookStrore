@@ -1,9 +1,8 @@
 import { Schema, model } from 'mongoose';
 
-const addressSchema = new Schema(
-  {
+const addressSchema = new Schema({
     userId: {
-      type: String
+      type: {type: String}
     },
     address: [
       {
@@ -13,8 +12,8 @@ const addressSchema = new Schema(
         phoneNumber: {
           type: Number
         },
-        type:{
-            type: String
+        type: {
+          type: String
         },
         address: {
           type: String
@@ -27,8 +26,8 @@ const addressSchema = new Schema(
         },
         state: {
           type: String
-        }
       }
+    }
     ]
   },
   {

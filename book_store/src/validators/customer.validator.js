@@ -6,7 +6,6 @@ export const addressValidation = (req, res, next) => {
     fullName: Joi.string().required(),
     phoneNumber: Joi.number().required(),
     type: Joi.string().required(),
-    type: Joi.string().required(),
     address: Joi.string().required(),
     pinCode: Joi.number(),
     city: Joi.string().required(),

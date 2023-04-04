@@ -59,3 +59,26 @@ export const removeBookFromCart = async (req, res) => {
         });
     }
 };
+
+/**
+ * Controller to purchase book by id 
+ * @param  {object} req - request object
+ * @param {object} res - response object
+ * @param {Function} next
+ */
+export const purchaseBookById = async (req, res) => {
+    try {
+      const data = await CartService.purchaseBookById(req.params._id);
+        res.status(HttpStatus.CREATED).json({
+          code: HttpStatus.CREATED,
+          data: data,
+          message: 'Book purchased successfully'
+        });
+     
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error}`
+      });
+    }
+  };
